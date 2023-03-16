@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using prod.Data;
 
@@ -11,9 +12,11 @@ using prod.Data;
 namespace prod.Migrations
 {
     [DbContext(typeof(prodContext))]
-    partial class prodContextModelSnapshot : ModelSnapshot
+    [Migration("20230316035108_AddEntityBase")]
+    partial class AddEntityBase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

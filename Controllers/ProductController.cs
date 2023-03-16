@@ -1,6 +1,7 @@
 using prod.Models;
 using prod.Services;
 using Microsoft.AspNetCore.Mvc;
+using prod.ViewModel;
 
 namespace prod.Controllers;
 
@@ -38,10 +39,10 @@ public class prodController : ControllerBase
 
 
     [HttpPost]
-    public IActionResult Create(Product newProduct)
+    public IActionResult Create([FromBody]ProductRequestViewModel newProduct)
     {
         var product = _service.Create(newProduct);
-        return CreatedAtAction(nameof(GetById), new { id = product!.Id }, product);
+        return Ok(product);
     }
 
     [HttpPut("{id}/updatecategory")]

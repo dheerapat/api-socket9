@@ -3,6 +3,7 @@ using prod.Data;
 using Microsoft.EntityFrameworkCore;
 using NT.Common.DataAccess;
 using AutoMapper;
+using prod.ViewModel;
 
 namespace prod.Services;
 
@@ -27,7 +28,7 @@ public class prodService
         {
             var repo = uow.GetRepository<Product>();
             // normally we query with condition isDelete == true
-            var result = repo.Filters(x => x.Id > 0).ToList();
+            var result = repo.Filters(x => x.id > 0).ToList();
             return _mapper.Map<List<Product>>(result);
         }
     }
@@ -37,15 +38,19 @@ public class prodService
         return _context.Products
             .Include(p => p.Category)
             .AsNoTracking()
-            .SingleOrDefault(p => p.Id ==id);
+            .SingleOrDefault(p => p.id ==id);
     }
 
-    public Product? Create(Product newProduct)
+    public Product? Create(ProductRequestViewModel newProduct)
     {
-        _context.Products.Add(newProduct);
-        _context.SaveChanges();
-
-        return newProduct;
+        using (var uow = _uowProvider.CreateUnitOfWork())
+        {
+            var repo = uow.GetRepository<Product>();
+            var insertProduct = this._mapper.Map<Product>(newProduct);
+            repo?.Add(insertProduct);
+            uow?.SaveChanges();
+            return this._mapper.Map<Product>(insertProduct);
+        }
     }
 
     public void UpdateCategory(int productId, int categoryId)
